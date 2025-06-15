@@ -1,10 +1,10 @@
 import { BookPlus, Clock, FilePlus } from "lucide-react";
 import { APP_CONSTANTS } from "../../constants/APP_CONSTANTS";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useUserStore } from "../../store/userStore";
 import { useUserVerifiedStore } from "../../store/userVerifiedStore";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 function QuickActions() {
-  const { setActiveTab } = useActiveTabStore();
+  const { goToRecent } = useDashBoardRoutes();
   const { userVerified } = useUserVerifiedStore();
   const { user } = useUserStore();
 
@@ -14,10 +14,6 @@ function QuickActions() {
 
   function handleNewNotebookClick() {
     document.getElementById(APP_CONSTANTS.CREATE_NOTEBOOK_MODAL).showModal();
-  }
-
-  function handleRecentClick() {
-    setActiveTab(APP_CONSTANTS.RECENT_ITEMS);
   }
 
   return (
@@ -56,10 +52,7 @@ function QuickActions() {
         </button>
       </div>
 
-      <button
-        className="btn w-sm h-[10rem] flex flex-col"
-        onClick={handleRecentClick}
-      >
+      <button className="btn w-sm h-[10rem] flex flex-col" onClick={goToRecent}>
         <Clock size={30} />
         <p className="text-xl">Recent</p>
         <div className="flex flex-row items-center text-secondary">

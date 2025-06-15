@@ -1,14 +1,14 @@
 import { Book } from "lucide-react";
 import { memo } from "react";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useCurrentNotesViewStore } from "../../store/currentNotesViewStore";
 import { useNoteSearchTermStore } from "../../store/noteSearchTermStore";
 import { APP_CONSTANTS } from "../../constants/APP_CONSTANTS";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 
 const MemoizedBook = memo(Book);
 
 function NotebookChip({ bookIcon, notebookName, source }) {
-  const { setActiveTab } = useActiveTabStore();
+  const { goToNotes } = useDashBoardRoutes();
   const { setNotesView } = useCurrentNotesViewStore();
   const { setNoteSearchTerm } = useNoteSearchTermStore();
 
@@ -20,7 +20,7 @@ function NotebookChip({ bookIcon, notebookName, source }) {
     }
 
     setNoteSearchTerm("book: " + notebookName);
-    setActiveTab(APP_CONSTANTS.NOTES_PAGE);
+    goToNotes();
   }
 
   return (

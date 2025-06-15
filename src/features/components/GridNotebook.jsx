@@ -21,16 +21,16 @@ import { useNotebooksStore } from "../../store/notebooksStore";
 import { useNotesStore } from "../../store/notesStore";
 import { useMessageStore } from "../../store/messageStore";
 import { useEditTargetNotebookStore } from "../../store/editTargetNotebookStore";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useNoteSearchTermStore } from "../../store/noteSearchTermStore";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 
 function GridNotebook({ notebookObject }) {
   const { notes, setNotes } = useNotesStore();
   const { notebooks, setNotebooks } = useNotebooksStore();
   const { setMessage } = useMessageStore();
   const { setEditTargetNotebook } = useEditTargetNotebookStore();
-  const { setActiveTab } = useActiveTabStore();
   const { setNoteSearchTerm } = useNoteSearchTermStore();
+  const { goToNotes } = useDashBoardRoutes();
 
   const [updatingPin, setUpdatingPin] = useState(false);
   const [deletingNotebook, setDeletingNotebook] = useState(false);
@@ -145,7 +145,7 @@ function GridNotebook({ notebookObject }) {
 
   function handleNotebookClick() {
     setNoteSearchTerm("book: " + notebookObject.name);
-    setActiveTab(APP_CONSTANTS.NOTES_PAGE);
+    goToNotes();
     notes.forEach((note) => {
       console.log(note.name, note.assignedTo[0] === notebookObject.id);
     });

@@ -1,8 +1,8 @@
 import { Plus, TagIcon, Trash2 } from "lucide-react";
 import { APP_CONSTANTS } from "../../constants/APP_CONSTANTS";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useNoteSearchTermStore } from "../../store/noteSearchTermStore";
 import { useNotebookSearchTermStore } from "../../store/notebookSearchTermStore";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 
 function Tag({
   id,
@@ -14,8 +14,8 @@ function Tag({
   onDeleteClick,
   source,
 }) {
-  const { _activeTab, setActiveTab } = useActiveTabStore();
   const { noteSearchTerm, setNoteSearchTerm } = useNoteSearchTermStore();
+  const { goToNotes, goToNotebooks } = useDashBoardRoutes();
   const { notebookSearchTerm, setNotebookSearchTerm } =
     useNotebookSearchTermStore();
 
@@ -31,14 +31,14 @@ function Tag({
     }
 
     if (source == APP_CONSTANTS.SOURCE_NOTE) {
-      setActiveTab(APP_CONSTANTS.NOTES_PAGE);
+      goToNotes();
       if (noteSearchTerm == "" || !noteSearchTerm.startsWith("tag:")) {
         setNoteSearchTerm("tag: " + tagText);
       } else {
         setNoteSearchTerm(noteSearchTerm + " " + tagText);
       }
     } else if (source == APP_CONSTANTS.SOURCE_NOTEBOOK) {
-      setActiveTab(APP_CONSTANTS.NOTEBOOKS_PAGE);
+      goToNotebooks();
       if (notebookSearchTerm == "" || !notebookSearchTerm.startsWith("tag:")) {
         setNotebookSearchTerm("tag: " + tagText);
       } else {

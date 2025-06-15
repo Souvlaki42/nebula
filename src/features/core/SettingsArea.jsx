@@ -12,7 +12,6 @@ import {
   softDeleteAllNotes,
   updateUserData,
 } from "../../firebase/services";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useMessageStore } from "../../store/messageStore";
 import { useNotebooksStore } from "../../store/notebooksStore";
 import { useNotesStore } from "../../store/notesStore";
@@ -28,7 +27,6 @@ function SettingsArea() {
   const { setMessage } = useMessageStore();
   const { setNotebooks } = useNotebooksStore();
   const { setNotes } = useNotesStore();
-  const { setActiveTab } = useActiveTabStore();
 
   // State variables
   const [name, setName] = useState(user?.name);
@@ -147,7 +145,6 @@ function SettingsArea() {
     signOutUser()
       .then(() => {
         setSigningOut(false);
-        setActiveTab(APP_CONSTANTS.DASHBOARD_PAGE);
         navigate("/login");
       })
       .catch((error) => {

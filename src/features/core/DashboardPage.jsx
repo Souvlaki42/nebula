@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, Link } from "react-router-dom";
 import Logo from "../../assets/Logo";
 import UntaggedIcon from "../../assets/UntaggedIcon";
 import { APP_CONSTANTS } from "../../constants/APP_CONSTANTS";
@@ -22,8 +22,6 @@ import {
   getAuthenticatedUser,
   getUserData,
 } from "../../firebase/services";
-import { useActiveTabStore } from "../../store/activeTabStore";
-import { useCurrentNotesViewStore } from "../../store/currentNotesViewStore";
 import { useMessageStore } from "../../store/messageStore";
 import { useNotebooksStore } from "../../store/notebooksStore";
 import { useNotesStore } from "../../store/notesStore";
@@ -36,15 +34,8 @@ import CreateNotebookModal from "../components/CreateNotebookModal";
 import EditNoteModal from "../components/EditNoteModal";
 import EditNotebookModal from "../components/EditNotebookModal";
 import GenericModal from "../components/GenericModal";
-import DashboardArea from "./DashboardArea";
-import NotebooksArea from "./NotebooksArea";
-import NotesArea from "./NotesArea";
-import PinnedArea from "./PinnedArea";
-import RecentArea from "./RecentArea";
-import SettingsArea from "./SettingsArea";
-import TaggedArea from "./TaggedArea";
-import UntaggedArea from "./UntaggedArea";
 import { SideBarButton } from "../components/SidebarButton";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -53,10 +44,18 @@ function DashboardPage() {
   const { userVerified, setUserVerified } = useUserVerifiedStore();
   const { setNotebooks } = useNotebooksStore();
   const { setNotes } = useNotesStore();
-  const { activeTab, setActiveTab } = useActiveTabStore();
   const { message } = useMessageStore();
   const { setQuotes } = useQuoteStore();
-  const { setNotesView } = useCurrentNotesViewStore();
+  const {
+    goToDashboard,
+    goToNotebooks,
+    goToNotes,
+    goToPinned,
+    goToRecent,
+    goToSettings,
+    goToTagged,
+    goToUntagged,
+  } = useDashBoardRoutes();
 
   const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
 
@@ -64,151 +63,60 @@ function DashboardPage() {
     setSideBarCollapsed(!sideBarCollapsed);
   }
 
-  function handleNewNoteButtonClick() {
+  function showNewNoteModal() {
     document.getElementById(APP_CONSTANTS.CREATE_NOTE_MODAL).showModal();
-    setActiveTab(APP_CONSTANTS.NOTES_PAGE);
+    goToNotes();
   }
 
-  function handleNewNotebookButtonClick() {
+  function showNewNotebookModal() {
     document.getElementById(APP_CONSTANTS.CREATE_NOTEBOOK_MODAL).showModal();
-    setActiveTab(APP_CONSTANTS.NOTEBOOKS_PAGE);
   }
 
-  function handleDashboardButtonClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.DASHBOARD_PAGE);
-  }
+  useHotkeys(`ctrl+shift+${user?.shortcuts.DASHBOARD_PAGE}`, goToDashboard, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleNotesButtonClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.NOTES_PAGE);
-  }
+  useHotkeys(`ctrl+shift+${user?.shortcuts.NOTES_PAGE}`, goToNotes, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleNotebooksButtonClick() {
-    setActiveTab(APP_CONSTANTS.NOTEBOOKS_PAGE);
-  }
+  useHotkeys(`ctrl+shift+${user?.shortcuts.NOTEBOOKS_PAGE}`, goToNotebooks, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleTaggedClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.TAGGED_ITEMS);
-  }
+  useHotkeys(`ctrl+shift+${user?.shortcuts.SETTINGS_PAGE}`, goToSettings, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleUntaggedClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.UNTAGGED_ITEMS);
-  }
+  useHotkeys(`shift+${user?.shortcuts.PINNED_PAGE}`, goToPinned, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handlePinnedClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.PINNED_ITEMS);
-  }
+  useHotkeys(`shift+${user?.shortcuts.RECENT_PAGE}`, goToRecent, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleRecentClick() {
-    setNotesView(APP_CONSTANTS.VIEW_GRID);
-    setActiveTab(APP_CONSTANTS.RECENT_ITEMS);
-  }
+  useHotkeys(`shift+${user?.shortcuts.TAGGED_PAGE}`, goToTagged, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
-  function handleSettingsButtonClick() {
-    setActiveTab(APP_CONSTANTS.SETTINGS_PAGE);
-  }
-
-  useHotkeys(
-    `ctrl+shift+${user?.shortcuts.DASHBOARD_PAGE}`,
-    () => {
-      handleDashboardButtonClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `ctrl+shift+${user?.shortcuts.NOTES_PAGE}`,
-    () => {
-      handleNotesButtonClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `ctrl+shift+${user?.shortcuts.NOTEBOOKS_PAGE}`,
-    () => {
-      handleNotebooksButtonClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `ctrl+shift+${user?.shortcuts.SETTINGS_PAGE}`,
-    () => {
-      handleSettingsButtonClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `shift+${user?.shortcuts.PINNED_PAGE}`,
-    () => {
-      handlePinnedClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `shift+${user?.shortcuts.RECENT_PAGE}`,
-    () => {
-      handleRecentClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `shift+${user?.shortcuts.TAGGED_PAGE}`,
-    () => {
-      handleTaggedClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
-  useHotkeys(
-    `shift+${user?.shortcuts.UNTAGGED_PAGE}`,
-    () => {
-      handleUntaggedClick();
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
+  useHotkeys(`shift+${user?.shortcuts.UNTAGGED_PAGE}`, goToUntagged, {
+    preventDefault: true,
+    enableOnFormTags: true,
+  });
 
   useHotkeys(
     `shift+${user?.shortcuts.NEW_NOTE}`,
     () => {
-      if (userVerified) {
-        handleNotesButtonClick();
-        document.getElementById(APP_CONSTANTS.CREATE_NOTE_MODAL).showModal();
-      } else {
-        return;
-      }
+      if (!userVerified) return;
+      document.getElementById(APP_CONSTANTS.CREATE_NOTE_MODAL).showModal();
     },
     {
       preventDefault: true,
@@ -218,14 +126,8 @@ function DashboardPage() {
   useHotkeys(
     `shift+${user?.shortcuts.NEW_NOTE_BOOK}`,
     () => {
-      if (userVerified) {
-        handleNotebooksButtonClick();
-        document
-          .getElementById(APP_CONSTANTS.CREATE_NOTEBOOK_MODAL)
-          .showModal();
-      } else {
-        return;
-      }
+      if (!userVerified) return;
+      document.getElementById(APP_CONSTANTS.CREATE_NOTEBOOK_MODAL).showModal();
     },
     {
       preventDefault: true,
@@ -343,14 +245,14 @@ function DashboardPage() {
           <SideBarButton
             icon={FilePlus}
             label="New note"
-            onClick={handleNewNoteButtonClick}
+            onClick={showNewNoteModal}
             isDisabled={!userVerified}
             sideBarCollapsed={sideBarCollapsed}
           />
           <SideBarButton
             icon={BookPlus}
             label="New notebook"
-            onClick={handleNewNotebookButtonClick}
+            onClick={showNewNotebookModal}
             isDisabled={!userVerified}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
@@ -361,24 +263,24 @@ function DashboardPage() {
           <SideBarButton
             icon={LayoutPanelTop}
             label="Dashboard"
-            onClick={handleDashboardButtonClick}
-            isActive={activeTab === APP_CONSTANTS.DASHBOARD_PAGE}
+            onClick={goToDashboard}
+            // isActive={activeTab === APP_CONSTANTS.DASHBOARD_PAGE}
             sideBarCollapsed={sideBarCollapsed}
           />
 
           <SideBarButton
             icon={File}
             label="Notes"
-            onClick={handleNotesButtonClick}
-            isActive={activeTab === APP_CONSTANTS.NOTES_PAGE}
+            onClick={goToNotes}
+            // isActive={activeTab === APP_CONSTANTS.NOTES_PAGE}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
           <SideBarButton
             icon={Book}
             label="Notebooks"
-            onClick={handleNotebooksButtonClick}
-            isActive={activeTab === APP_CONSTANTS.NOTEBOOKS_PAGE}
+            onClick={goToNotebooks}
+            // isActive={activeTab === APP_CONSTANTS.NOTEBOOKS_PAGE}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -388,31 +290,31 @@ function DashboardPage() {
           <SideBarButton
             icon={Pin}
             label="Pinned"
-            onClick={handlePinnedClick}
-            isActive={activeTab === APP_CONSTANTS.PINNED_ITEMS}
+            onClick={goToPinned}
+            // isActive={activeTab === APP_CONSTANTS.PINNED_ITEMS}
             sideBarCollapsed={sideBarCollapsed}
           />
           <SideBarButton
             icon={Clock}
             label="Recent"
-            onClick={handleRecentClick}
-            isActive={activeTab === APP_CONSTANTS.RECENT_ITEMS}
+            onClick={goToRecent}
+            // isActive={activeTab === APP_CONSTANTS.RECENT_ITEMS}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
           <SideBarButton
             icon={Tag}
             label="Tagged"
-            onClick={handleTaggedClick}
-            isActive={activeTab === APP_CONSTANTS.TAGGED_ITEMS}
+            onClick={goToTagged}
+            // isActive={activeTab === APP_CONSTANTS.TAGGED_ITEMS}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
           <SideBarButton
             icon={UntaggedIcon}
             label="Untagged"
-            onClick={handleUntaggedClick}
-            isActive={activeTab === APP_CONSTANTS.UNTAGGED_ITEMS}
+            onClick={goToUntagged}
+            // isActive={activeTab === APP_CONSTANTS.UNTAGGED_ITEMS}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -423,32 +325,14 @@ function DashboardPage() {
           <SideBarButton
             icon={Settings}
             label="Settings"
-            onClick={handleSettingsButtonClick}
-            isActive={activeTab === APP_CONSTANTS.SETTINGS_PAGE}
+            onClick={goToSettings}
+            // isActive={activeTab === APP_CONSTANTS.SETTINGS_PAGE}
             sideBarCollapsed={sideBarCollapsed}
           />
         </div>
       </div>
       <div className="divider divider-horizontal m-0"></div>
-      {activeTab == APP_CONSTANTS.DASHBOARD_PAGE ? (
-        <DashboardArea></DashboardArea>
-      ) : activeTab == APP_CONSTANTS.NOTES_PAGE ? (
-        <NotesArea></NotesArea>
-      ) : activeTab == APP_CONSTANTS.NOTEBOOKS_PAGE ? (
-        <NotebooksArea></NotebooksArea>
-      ) : activeTab == APP_CONSTANTS.SETTINGS_PAGE ? (
-        <SettingsArea></SettingsArea>
-      ) : activeTab == APP_CONSTANTS.TAGGED_ITEMS ? (
-        <TaggedArea></TaggedArea>
-      ) : activeTab == APP_CONSTANTS.UNTAGGED_ITEMS ? (
-        <UntaggedArea></UntaggedArea>
-      ) : activeTab == APP_CONSTANTS.PINNED_ITEMS ? (
-        <PinnedArea></PinnedArea>
-      ) : activeTab == APP_CONSTANTS.RECENT_ITEMS ? (
-        <RecentArea></RecentArea>
-      ) : (
-        ""
-      )}
+      <Outlet />
     </div>
   );
 }

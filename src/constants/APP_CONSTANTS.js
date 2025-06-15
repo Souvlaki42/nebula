@@ -29,8 +29,6 @@ export const APP_CONSTANTS = {
   WITH_GOOGLE: "google",
   NULL: "null",
   UNKNOWN_ERROR: "An unknown error occurred. Try again later.",
-  DASHBOARD_PAGE: "dashboard",
-  NOTES_PAGE: "notes",
   NO_NOTES:
     "No notes in sight. Maybe they’re on vacation? \n Let’s bring new ones to life!",
   NO_TAGGED_ITEMS:
@@ -40,8 +38,6 @@ export const APP_CONSTANTS = {
     "Nothing pinned yet. Got a favorite? Hit \n the pin icon to keep it close.",
   NO_RECENT_ITEMS:
     "Nothing recent to show — but don’t worry, \n we’ll keep this space updated as you go.",
-  NOTEBOOKS_PAGE: "notebooks",
-  SETTINGS_PAGE: "settings",
   TAGGED_ITEMS: "taggedItems",
   UNTAGGED_ITEMS: "untaggedItems",
   PINNED_ITEMS: "pinnedItems",

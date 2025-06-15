@@ -5,7 +5,6 @@ import {
   hardDeleteNotebookAndLinkedNotes,
   updateNotebookPinStatus,
 } from "../../firebase/services";
-import { useActiveTabStore } from "../../store/activeTabStore";
 import { useEditTargetNotebookStore } from "../../store/editTargetNotebookStore";
 import { useMessageStore } from "../../store/messageStore";
 import { useNotebooksStore } from "../../store/notebooksStore";
@@ -15,13 +14,14 @@ import { dateDistanceFromNow } from "../../utils/dateDistanceFromNow";
 import { formatDateDDMMYY } from "../../utils/formatDateDDMMYY";
 import { objectToDate } from "../../utils/objectToDate";
 import Tag from "./Tag";
+import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
 
 function TableNotebook({ notebookObject }) {
   const { notes, setNotes } = useNotesStore();
   const { notebooks, setNotebooks } = useNotebooksStore();
   const { setMessage } = useMessageStore();
   const { setEditTargetNotebook } = useEditTargetNotebookStore();
-  const { setActiveTab } = useActiveTabStore();
+  const { goToNotes } = useDashBoardRoutes();
   const { setNoteSearchTerm } = useNoteSearchTermStore();
 
   const [updatingPin, setUpdatingPin] = useState(false);
@@ -29,7 +29,7 @@ function TableNotebook({ notebookObject }) {
 
   function handleNotebookClick() {
     setNoteSearchTerm("book: " + notebookObject.name);
-    setActiveTab(APP_CONSTANTS.NOTES_PAGE);
+    goToNotes();
   }
 
   function handleNotebookPinAndUnpin() {
