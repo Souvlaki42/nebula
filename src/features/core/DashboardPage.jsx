@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { Outlet, useNavigate, Link } from "react-router-dom";
+import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import Logo from "../../assets/Logo";
 import UntaggedIcon from "../../assets/UntaggedIcon";
 import { APP_CONSTANTS } from "../../constants/APP_CONSTANTS";
@@ -35,7 +35,10 @@ import EditNoteModal from "../components/EditNoteModal";
 import EditNotebookModal from "../components/EditNotebookModal";
 import GenericModal from "../components/GenericModal";
 import { SideBarButton } from "../components/SidebarButton";
-import { useDashBoardRoutes } from "../../utils/useDashboardRoutes";
+import {
+  useDashBoardRoutes,
+  DASHBOARD_ROUTES,
+} from "../../utils/useDashboardRoutes";
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -59,6 +62,8 @@ function DashboardPage() {
 
   const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
 
+  const { pathname } = useLocation();
+
   function handleCollapse() {
     setSideBarCollapsed(!sideBarCollapsed);
   }
@@ -70,6 +75,7 @@ function DashboardPage() {
 
   function showNewNotebookModal() {
     document.getElementById(APP_CONSTANTS.CREATE_NOTEBOOK_MODAL).showModal();
+    goToNotebooks();
   }
 
   useHotkeys(`ctrl+shift+${user?.shortcuts.DASHBOARD_PAGE}`, goToDashboard, {
@@ -264,7 +270,7 @@ function DashboardPage() {
             icon={LayoutPanelTop}
             label="Dashboard"
             onClick={goToDashboard}
-            // isActive={activeTab === APP_CONSTANTS.DASHBOARD_PAGE}
+            isActive={pathname == DASHBOARD_ROUTES.Overview}
             sideBarCollapsed={sideBarCollapsed}
           />
 
@@ -272,7 +278,7 @@ function DashboardPage() {
             icon={File}
             label="Notes"
             onClick={goToNotes}
-            // isActive={activeTab === APP_CONSTANTS.NOTES_PAGE}
+            isActive={pathname == DASHBOARD_ROUTES.Notes}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -280,7 +286,7 @@ function DashboardPage() {
             icon={Book}
             label="Notebooks"
             onClick={goToNotebooks}
-            // isActive={activeTab === APP_CONSTANTS.NOTEBOOKS_PAGE}
+            isActive={pathname == DASHBOARD_ROUTES.Notebooks}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -291,14 +297,14 @@ function DashboardPage() {
             icon={Pin}
             label="Pinned"
             onClick={goToPinned}
-            // isActive={activeTab === APP_CONSTANTS.PINNED_ITEMS}
+            isActive={pathname == DASHBOARD_ROUTES.Pinned}
             sideBarCollapsed={sideBarCollapsed}
           />
           <SideBarButton
             icon={Clock}
             label="Recent"
             onClick={goToRecent}
-            // isActive={activeTab === APP_CONSTANTS.RECENT_ITEMS}
+            isActive={pathname == DASHBOARD_ROUTES.Recent}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -306,7 +312,7 @@ function DashboardPage() {
             icon={Tag}
             label="Tagged"
             onClick={goToTagged}
-            // isActive={activeTab === APP_CONSTANTS.TAGGED_ITEMS}
+            isActive={pathname == DASHBOARD_ROUTES.Tagged}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -314,7 +320,7 @@ function DashboardPage() {
             icon={UntaggedIcon}
             label="Untagged"
             onClick={goToUntagged}
-            // isActive={activeTab === APP_CONSTANTS.UNTAGGED_ITEMS}
+            isActive={pathname == DASHBOARD_ROUTES.Untagged}
             sideBarCollapsed={sideBarCollapsed}
             addTopMargin
           />
@@ -326,7 +332,7 @@ function DashboardPage() {
             icon={Settings}
             label="Settings"
             onClick={goToSettings}
-            // isActive={activeTab === APP_CONSTANTS.SETTINGS_PAGE}
+            isActive={pathname == DASHBOARD_ROUTES.Settings}
             sideBarCollapsed={sideBarCollapsed}
           />
         </div>

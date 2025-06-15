@@ -32,14 +32,8 @@ function App() {
       <Routes>
         {/* This layout components is rendered on every page */}
         <Route path="/" element={<Layout />}>
-          <Route
-            path="/"
-            element={<HomePage redirect={true}></HomePage>}
-          ></Route>
-          <Route
-            path="/home"
-            element={<HomePage redirect={false}></HomePage>}
-          ></Route>
+          <Route path="/" element={<HomePage redirect />}></Route>
+          <Route path="/home" element={<HomePage />}></Route>
           <Route path="/dashboard" element={<DashboardPage />}>
             <Route path={Overview} element={<DashboardArea />} />
             <Route path={Notes} element={<NotesArea />} />

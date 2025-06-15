@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
-
 export const SideBarButton = ({
   icon,
   label,
   onClick,
   isActive = false,
+  isDisabled = false,
   sideBarCollapsed = false,
   className = "",
   addTopMargin = false,
@@ -18,7 +17,12 @@ export const SideBarButton = ({
   const tooltip = sideBarCollapsed ? label : undefined;
 
   return (
-    <Link className={baseClasses} onClick={onClick} title={tooltip}>
+    <button
+      className={baseClasses}
+      onClick={onClick}
+      disabled={isDisabled}
+      title={tooltip}
+    >
       {sideBarCollapsed ? (
         <Icon className="shrink-0" />
       ) : (
@@ -27,6 +31,6 @@ export const SideBarButton = ({
           <p className="text-nowrap">{label}</p>
         </>
       )}
-    </Link>
+    </button>
   );
 };

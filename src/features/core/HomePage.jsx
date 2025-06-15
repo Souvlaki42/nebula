@@ -28,7 +28,7 @@ import FeatureCard from "../components/FeatureCard";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 
-function HomePage({ redirect }) {
+function HomePage({ redirect = false }) {
   const navigate = useNavigate();
 
   const { theme } = useThemeStore();
@@ -43,7 +43,7 @@ function HomePage({ redirect }) {
         }
       });
     }
-  }, [navigate]);
+  }, [navigate, redirect]);
 
   return (
     <div className="overflow-x-hidden font-jakarta h-[100vh] overflow-y-scroll scroll-smooth scrollbar-thin">
